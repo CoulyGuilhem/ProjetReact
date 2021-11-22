@@ -43,10 +43,12 @@ class Board extends React.Component {
         return (
             <div>
                 {table}
+
             </div>
         );
     }
 }
+
 
 class Game extends React.Component {
     constructor(props) {
@@ -54,7 +56,7 @@ class Game extends React.Component {
         this.state = {
             history: [
                 {
-                    squares: Array(9).fill(null)
+                    squares: Array(100)
                 }
             ],
             stepNumber: 0,
@@ -66,10 +68,17 @@ class Game extends React.Component {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
         const squares = current.squares.slice();
+
+        const data = []
+
+        for (let i = 0;i <squares.length;i++){
+            data[i] = Math.random() * (2 - 1) + 1;
+        }
+
         if (calculateWinner(squares) || squares[i]) {
             return;
         }
-        squares[i] = this.state.xIsNext ? "X" : "O";
+        squares[i] = data[i]
         this.setState({
             history: history.concat([
                 {
