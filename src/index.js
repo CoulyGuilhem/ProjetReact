@@ -62,48 +62,68 @@ class Game extends React.Component {
 
     generateMines(){
         const data = Array(100).fill(0)
-        for (let i = 0 ; i < 30 ; i++){
+        for (let i = 0 ; i < 10 ; i++){
             let random = Math.round(Math.random() * (99 - 0))
             do {
                 random = Math.round(Math.random() * (99 - 0))
             } while(data[random] === 9)
             data[random] = 9
         }
+        console.log("---------------------Mines------------------")
         console.log(data)
-        //this.generateWarning(data)
+        this.generateWarning(data,10,10)
         return data;
     }
 
     generateWarning(data,longueur,largeur){
         for(let i =0;i<data.length;i++){
 
-            if (data[i] === 9) {
+            if (data[i] >= 9) {
 
-                if (i !== 0) {
-                    data[i - 1] = data[i] + 1;
-                    if( Math.floor(i/longueur) !== 0){
-                        data[ i - 1 - longueur] += 1;
-                    } else if (Math.floor(i/longueur) !== largeur){
-                        data[ i - 1 + longueur ] +=1
+                // Gere les 3 cases a gauche de la mine
+
+                if (i !== 0 && i%longueur !==0) {
+                    data[i - 1] = data[i - 1] + 1;
+                    if (Math.floor(i / longueur) !== 0) {
+                        data[i - 1 - longueur] = data[i - 1 - longueur] + 1;
                     }
-
-                } else if(i !== data.length -1 ){
-                    data[ i + 1 ] += 1;
-                    if(Math.floor(i/longueur) !== 0){
-                        data[ i + 1 - longueur] += 1;
-                    } else if (Math.floor(i/longueur) !==largeur){
-                        data[ i + 1 + longueur ] +=1
+                    if (Math.floor(i / longueur) !== largeur-1) {
+                        data[i - 1 + longueur] = data[i - 1 + longueur] + 1;
                     }
-
-                } else if (Math.floor(i/longueur) !== 0){
-                    data[ i - longueur ] += 1;
-
-                } else if (Math.floor(i/longueur) !== largeur){
-                    data[ i + longueur ] +=1
                 }
+                // Gere les 3 cases a droite de la mine
+
+                if(i !== data.length - 1 && i%longueur !== longueur-1) {
+                    data[i + 1] = data[i + 1] + 1;
+                    if (Math.floor(i / longueur) !== 0) {
+                        data[i + 1 - longueur] = data[i + 1 - longueur] + 1;
+                    }
+                    if (Math.floor(i / longueur) !== largeur) {
+                        data[i + 1 + longueur] = data[i + 1 + longueur] + 1;
+                    }
+                }
+
+                // Gere la case au dessus de la mine
+
+                if (Math.floor(i/longueur) !== 0){
+                    data[ i - longueur ] = data[ i - longueur ] + 1;
+                }
+                // Gere la case en dessous de la mine
+
+
+                 if (Math.floor(i/longueur) !== largeur){
+                    data[ i + longueur ] = data[ i + longueur ] + 1
+                 }
             }
-            console.log(data)
+
         }
+        for(let i = 0; i < data.length ; i++){
+            if(data[i] >= 9 ){
+                data[i] = 9;
+            }
+        }
+        console.log("---------------------Mines + Chiffres------------------")
+        console.log(data)
         this.setState({
             mine: data,
         });
@@ -114,11 +134,12 @@ class Game extends React.Component {
             const squares = this.state.squares.slice();
             const mine = this.state.mine.slice();
             squares[i] = mine[i];
+            /**
             if(mine[i] === 9){
                 this.setState({
                     gameState: "BOOM",
                 });
-            }
+            }*/
             this.setState({
                 squares: squares,
             });
