@@ -54,88 +54,96 @@ class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            history: [
-                {
-                    squares: Array(100)
-                }
-            ],
-            stepNumber: 0,
-            xIsNext: true
+            squares: Array(100).fill(null),
+            mine: this.generateMines(),
+            gameState: ""
         };
     }
 
-    handleClick(i) {
-        const history = this.state.history.slice(0, this.state.stepNumber + 1);
-        const current = history[history.length - 1];
-        const squares = current.squares.slice();
-
-        const data = []
-
-        for (let i = 0;i <squares.length;i++){
-            data[i] = Math.random() * (2 - 1) + 1;
+    generateMines(){
+        const data = Array(100).fill(0)
+        for (let i = 0 ; i < 30 ; i++){
+            let random = Math.round(Math.random() * (99 - 0))
+            do {
+                random = Math.round(Math.random() * (99 - 0))
+            } while(data[random] === 9)
+            data[random] = 9
         }
+        console.log(data)
+        //this.generateWarning(data)
+        return data;
+    }
 
-        if (calculateWinner(squares) || squares[i]) {
-            return;
-        }
-        squares[i] = data[i]
-        this.setState({
-            history: history.concat([
-                {
-                    squares: squares
+    generateWarning(data,longueur,largeur){
+        for(let i =0;i<data.length;i++){
+
+            if (data[i] === 9) {
+
+                if (i !== 0) {
+                    data[i - 1] = data[i] + 1;
+                    if( Math.floor(i/longueur) !== 0){
+                        data[ i - 1 - longueur] += 1;
+                    } else if (Math.floor(i/longueur) !== largeur){
+                        data[ i - 1 + longueur ] +=1
+                    }
+
+                } else if(i !== data.length -1 ){
+                    data[ i + 1 ] += 1;
+                    if(Math.floor(i/longueur) !== 0){
+                        data[ i + 1 - longueur] += 1;
+                    } else if (Math.floor(i/longueur) !==largeur){
+                        data[ i + 1 + longueur ] +=1
+                    }
+
+                } else if (Math.floor(i/longueur) !== 0){
+                    data[ i - longueur ] += 1;
+
+                } else if (Math.floor(i/longueur) !== largeur){
+                    data[ i + longueur ] +=1
                 }
-            ]),
-            stepNumber: history.length,
-            xIsNext: !this.state.xIsNext
+            }
+            console.log(data)
+        }
+        this.setState({
+            mine: data,
         });
     }
 
-    jumpTo(step) {
-        this.setState({
-            stepNumber: step,
-            xIsNext: (step % 2) === 0
-        });
+    handleClick(i) {
+        if(this.state.gameState === ""){
+            const squares = this.state.squares.slice();
+            const mine = this.state.mine.slice();
+            squares[i] = mine[i];
+            if(mine[i] === 9){
+                this.setState({
+                    gameState: "BOOM",
+                });
+            }
+            this.setState({
+                squares: squares,
+            });
+        }
     }
+
 
     render() {
-        const history = this.state.history;
-        const current = history[this.state.stepNumber];
-        
         return (
             <div className="game">
                 <div className="game-board">
                     <Board
-                        squares={current.squares}
+                        squares={this.state.squares}
                         onClick={i => this.handleClick(i)}
                     />
+                </div>
+                <div>
+                    <p>{this.state.gameState}</p>
                 </div>
             </div>
         );
     }
 }
-
 // ========================================
-
 ReactDOM.render(<Game />, document.getElementById("root"));
 
-function calculateWinner(squares) {
-    const lines = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [2, 4, 6]
-    ];
-    for (let i = 0; i < lines.length; i++) {
-        const [a, b, c] = lines[i];
-        if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-            return squares[a];
-        }
-    }
-    return null;
-}
 
 
