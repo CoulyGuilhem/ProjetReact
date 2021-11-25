@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+
 
 function Square(props) {
     return (
@@ -36,14 +35,14 @@ class Board extends React.Component {
     }
 
     render() {
-        const table = [];
+        const lines = [];
         for (let i = 0; i < 10; i++){
-            table.push(this.renderRows(i))
+            lines[i]=this.renderRows(i)
         }
+
         return (
             <div>
-                {table}
-
+                {lines}
             </div>
         );
     }
@@ -54,105 +53,228 @@ class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            squares: Array(100).fill(null),
-            mine: this.generateMines(),
+            gameTable: Array(100).fill(null),
+            tableMine: this.generateMines(10,10),
             gameState: ""
         };
+
     }
 
-    generateMines(){
-        const data = Array(100).fill(0)
-        for (let i = 0 ; i < 10 ; i++){
-            let random = Math.round(Math.random() * (99 - 0))
+    generateMines(line,row){
+        let tableMine = Array(10)
+        for(let i = 0;i<line;i++){
+            tableMine[i] = Array(row).fill(0)
+        }
+
+        for (let i = 0 ; i < 2 ; i++){
+            let randomLine = Math.round(Math.random() * (9))
+            let randomRaw = Math.round(Math.random() * (9))
             do {
-                random = Math.round(Math.random() * (99 - 0))
-            } while(data[random] === 9)
-            data[random] = 9
+                randomLine = Math.round(Math.random() * (9))
+                randomRaw = Math.round(Math.random() * (9))
+            } while(tableMine[randomLine][randomRaw] === 9)
+            tableMine[randomLine][randomRaw] = 9;
         }
         console.log("---------------------Mines------------------")
-        console.log(data)
-        this.generateWarning(data,10,10)
-        return data;
+        console.log(tableMine)
+
+
+        tableMine = this.generateWarning(tableMine,line,row)
+        return tableMine
+
     }
 
-    generateWarning(data,longueur,largeur){
-        for(let i =0;i<data.length;i++){
+    generateWarning(tableMine,line,row){
+        for(let i = 0 ; i < line ; i++){
+            for(let j = 0; j < row ; j++){
+                if(tableMine[i][j] === 9){
 
-            if (data[i] >= 9) {
-
-                // Gere les 3 cases a gauche de la mine
-
-                if (i !== 0 && i%longueur !==0) {
-                    data[i - 1] = data[i - 1] + 1;
-                    if (Math.floor(i / longueur) !== 0) {
-                        data[i - 1 - longueur] = data[i - 1 - longueur] + 1;
+                    // Gestion 3 cases haut
+                    if(i !== 0){
+                        tableMine[i-1][j] = tableMine[i-1][j] +1
+                        if(j !== 0){
+                            tableMine[i-1][j-1] = tableMine[i-1][j-1] +1
+                        }
+                        if(j !== row-1){
+                            tableMine[i-1][j+1] = tableMine[i-1][j+1] +1
+                        }
                     }
-                    if (Math.floor(i / longueur) !== largeur-1) {
-                        data[i - 1 + longueur] = data[i - 1 + longueur] + 1;
+
+                    //Gestion 3 Cases bas
+
+                    if(i !== line-1){
+                        tableMine[i+1][j] = tableMine[i+1][j] +1
+                        if(j !== 0){
+                            tableMine[i+1][j-1] = tableMine[i+1][j-1] +1
+                        }
+                        if(j !== row-1){
+                            tableMine[i+1][j+1] = tableMine[i+1][j+1] +1
+                        }
+                    }
+
+                    // gestion case gauche
+
+                    if(j !== 0){
+                        tableMine[i][j-1] = tableMine[i][j-1] +1
+                    } else if (j !== row-1){
+                        tableMine[i][j+1] = tableMine[i][j+1] +1
                     }
                 }
-                // Gere les 3 cases a droite de la mine
-
-                if(i !== data.length - 1 && i%longueur !== longueur-1) {
-                    data[i + 1] = data[i + 1] + 1;
-                    if (Math.floor(i / longueur) !== 0) {
-                        data[i + 1 - longueur] = data[i + 1 - longueur] + 1;
-                    }
-                    if (Math.floor(i / longueur) !== largeur) {
-                        data[i + 1 + longueur] = data[i + 1 + longueur] + 1;
-                    }
-                }
-
-                // Gere la case au dessus de la mine
-
-                if (Math.floor(i/longueur) !== 0){
-                    data[ i - longueur ] = data[ i - longueur ] + 1;
-                }
-                // Gere la case en dessous de la mine
-
-
-                 if (Math.floor(i/longueur) !== largeur){
-                    data[ i + longueur ] = data[ i + longueur ] + 1
-                 }
             }
-
         }
-        for(let i = 0; i < data.length ; i++){
-            if(data[i] >= 9 ){
-                data[i] = 9;
+
+        for(let i = 0; i < line ; i++){
+            for(let j = 0; j < row ; j++) {
+                if (tableMine[i][j] >= 9) {
+                    tableMine[i][j] = 9;
+                }
             }
         }
         console.log("---------------------Mines + Chiffres------------------")
-        console.log(data)
-        this.setState({
-            mine: data,
-        });
+        console.log(tableMine)
+        return tableMine
     }
 
     handleClick(i) {
         if(this.state.gameState === ""){
-            const squares = this.state.squares.slice();
-            const mine = this.state.mine.slice();
-            squares[i] = mine[i];
+            const gameTable = this.state.gameTable.slice();
+            const tableMine = this.state.tableMine.slice();
+            const line = Math.floor(i / 10)
+            const row = i % 10
+            if(tableMine[line][row] === 0 ){
+                gameTable[i] = tableMine[line][row]
+                this.setState({
+                    gameTable: gameTable,
+                })
+                // TODO zone vide
+
+            } else {
+                gameTable[i] = tableMine[line][row]
+                this.setState({
+                    gameTable: gameTable,
+                })
+            }
+
             /**
             if(mine[i] === 9){
                 this.setState({
                     gameState: "BOOM",
                 });
             }*/
-            this.setState({
+
+            /**this.setState({
                 squares: squares,
-            });
+            });*/
         }
     }
 
+
+    /**
+    discoverZoneGauche(squares,i,longueur,largeur){
+
+        const mine = this.state.mine.slice();
+
+        // Gere les 3 cases a gauche de la mine
+        squares[i] = mine[i];
+        this.setState({squares: squares});
+        if (i !== 0 && i%longueur !==0) {
+            squares[i - 1] = mine[i - 1];
+            this.setState({squares: squares});
+            if (mine[i - 1] === 0) {
+                this.discoverZoneGauche(squares, i - 1, 10, 10)
+                //this.discoverZoneHaut(squares, i - 1, 10);
+                //this.discoverZoneBas(squares,i -1,10,10);
+            }
+
+            /**
+            if (Math.floor(i / longueur) !== 0) {
+                squares[i - 1 - longueur] = mine[i - 1 - longueur];
+                this.setState({squares: squares});
+                if (mine[i - 1 - longueur] === 0) {
+                    this.discoverZoneGauche(squares, i - 1 - longueur, 10, 10);
+                }
+            }
+            if (Math.floor(i / longueur) !== largeur - 1) {
+                squares[i - 1 + longueur] = mine[i - 1 + longueur];
+                this.setState({squares: squares});
+                if (mine[i - 1 + longueur] === 0) {
+                    this.discoverZoneGauche(squares, i - 1 + longueur, 10, 10);
+                }
+            }
+        }
+    }
+// Gere les 3 cases a droite de la mine
+    discoverZoneDroite(squares,i,longueur,largeur) {
+
+        const mine = this.state.mine.slice();
+        squares[i] = mine[i];
+        this.setState({squares: squares});
+        if(i !== mine.length - 1 && i%longueur !== longueur-1) {
+            squares[i + 1] = mine[i + 1];
+            this.setState({squares: squares});
+            if (mine[i + 1] === 0) {
+                this.discoverZoneDroite(squares,i + 1, 10, 10)
+                //this.discoverZoneHaut(squares, i + 1, 10);
+                //this.discoverZoneBas(squares,i + 1,10,10);
+            }
+            /**
+            if (Math.floor(i / longueur) !== 0) {
+                squares[i + 1 - longueur] = mine[i + 1 - longueur];
+                this.setState({squares: squares});
+                if (mine[i + 1 - longueur] === 0) {
+                    this.discoverZoneDroite(squares,i + 1 - longueur, 10, 10);
+                }
+
+                if (Math.floor(i / longueur) !== largeur - 1) {
+                    squares[i + 1 + longueur] = mine[i + 1 + longueur];
+                    this.setState({squares: squares});
+                    if (mine[i + 1 + longueur] === 0) {
+                        this.discoverZoneDroite(squares,i + 1 + longueur, 10, 10);
+                    }
+                }
+            }
+        }
+    }
+
+    discoverZoneHaut(squares,i,longueur) {
+        const mine = this.state.mine.slice();
+        squares[i] = mine[i];
+        this.setState({squares: squares});
+        // Gere la case au dessus de la mine
+        if (Math.floor(i / longueur) !== 0) {
+            squares[i - longueur] = mine[i - longueur];
+            this.setState({squares: squares});
+            if (mine [i - longueur] === 0) {
+                this.discoverZoneGauche(squares, i - longueur, 10, 10);
+                this.discoverZoneDroite(squares, i - longueur, 10, 10);
+                this.discoverZoneHaut(squares, i - longueur, 10);
+            }
+        }
+    }
+
+    discoverZoneBas(squares,i,longueur,largeur) {
+        const mine = this.state.mine.slice();
+        squares[i] = mine[i];
+        this.setState({squares: squares});
+        if (Math.floor(i/longueur) !== largeur){
+            squares[ i + longueur ] = mine[ i + longueur ];
+            this.setState({squares: squares});
+            if(mine[i+longueur] === 0){
+                this.discoverZoneGauche(squares, i + longueur, 10, 10);
+                this.discoverZoneDroite(squares, i + longueur, 10, 10);
+                this.discoverZoneBas(squares,i + longueur,10,10);
+            }
+        }
+    }
+            // Gere la case en dessous de la mine
+*/
 
     render() {
         return (
             <div className="game">
                 <div className="game-board">
                     <Board
-                        squares={this.state.squares}
+                        squares={this.state.gameTable}
                         onClick={i => this.handleClick(i)}
                     />
                 </div>
