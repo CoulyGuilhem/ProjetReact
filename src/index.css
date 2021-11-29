@@ -1,10 +1,17 @@
 body {
+  background-color: black;
   font: 14px "Century Gothic", Futura, sans-serif;
   margin: 20px;
 }
 
 ol, ul {
   padding-left: 30px;
+}
+
+.game-board{
+  border: 50px solid #542;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .board-row:after {
@@ -17,31 +24,48 @@ ol, ul {
   margin-bottom: 10px;
 }
 
+.gameState{
+  color:white;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .squareFlag{
   background: #f90;
-  border: 1px solid #999;
+  border: 3px solid #88c;
   float: left;
   font-size: 24px;
   font-weight: bold;
   line-height: 34px;
   height: 34px;
   margin-right: -1px;
-  margin-top: -1px;
   padding: 0;
   text-align: center;
   width: 34px;
 }
 
 .squareNotDiscovered{
-  background: #fff;
-  border: 1px solid #999;
+  background: #66a;
+  border: 3px solid #88c;
   float: left;
   font-size: 24px;
   font-weight: bold;
   line-height: 34px;
   height: 34px;
   margin-right: -1px;
-  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 34px;
+}
+.squareNotDiscovered2{
+  background: #aaf;
+  border: 3px solid #88c;
+  float: left;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 34px;
+  margin-right: -1px;
   padding: 0;
   text-align: center;
   width: 34px;
@@ -49,14 +73,13 @@ ol, ul {
 
 .squareNull{
   background: #5c5;
-  border: 1px solid #999;
+  border: 3px solid #88c;
   float: left;
   font-size: 24px;
   font-weight: bold;
   line-height: 34px;
   height: 34px;
   margin-right: -1px;
-  margin-top: -1px;
   padding: 0;
   text-align: center;
   width: 34px;
@@ -64,14 +87,13 @@ ol, ul {
 
 .squareNearMine{
   background: #fe5;
-  border: 1px solid #999;
+  border: 3px solid #88c;
   float: left;
   font-size: 24px;
   font-weight: bold;
   line-height: 34px;
   height: 34px;
   margin-right: -1px;
-  margin-top: -1px;
   padding: 0;
   text-align: center;
   width: 34px;
@@ -79,14 +101,13 @@ ol, ul {
 
 .squareMine{
   background: #f00;
-  border: 1px solid #999;
+  border: 3px solid #88c;
   float: left;
   font-size: 24px;
   font-weight: bold;
   line-height: 34px;
   height: 34px;
   margin-right: -1px;
-  margin-top: -1px;
   padding: 0;
   text-align: center;
   width: 34px;

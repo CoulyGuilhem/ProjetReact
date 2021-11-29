@@ -31,16 +31,32 @@ class Board extends React.Component {
 
 
     renderSquare(i) {
+        const line = 20
         let className
         let value = this.props.squares[i]
         if(value === 0){
             value = null
             className ="squareNull"
         } else if (value === null){
-            className = "squareNotDiscovered"
+            if(((Math.floor(i/line))%2 === 0)) {
+                if (i % 2 === 0) {
+                    className = "squareNotDiscovered2"
+                } else {
+                    className = "squareNotDiscovered"
+                }
+            } else {
+                if (i % 2 !== 0) {
+                    className = "squareNotDiscovered2"
+                } else {
+                    className = "squareNotDiscovered"
+                }
+            }
+
         } else if (value === 9){
+            value="💣"
             className = "squareMine"
         } else if (value === "P") {
+            value = "⚑"
             className="squareFlag"
         } else {
             className="squareNearMine"
@@ -70,8 +86,8 @@ class Board extends React.Component {
 
     renderRows(coordonne){
         const rows = [];
-        for (let i = 0; i < 10; i++){
-            rows.push(this.renderSquare(i+coordonne*10))
+        for (let i = 0; i < 20; i++){
+            rows.push(this.renderSquare(i+coordonne*20))
         }
         return (
             <div className="board_line" key={"lien : "+coordonne}>
@@ -87,7 +103,7 @@ class Board extends React.Component {
 
     render() {
         const lines = [];
-        for (let i = 0; i < 10; i++){
+        for (let i = 0; i < 20; i++){
             lines[i]=this.renderRows(i)
         }
         return (
@@ -116,8 +132,8 @@ class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            gameTable: Array(100).fill(null),
-            tableMine: this.generateMines(10,10,15),
+            tableMine: this.generateMines(20,20,40),
+            gameTable: Array(20*20).fill(null),
             gameState: ""
         };
     }
@@ -134,7 +150,7 @@ class Game extends React.Component {
      */
 
     generateMines(line,row,mine){
-        let tableMine = Array(10)
+        let tableMine = Array(line)
         for(let i = 0;i<line;i++){
             tableMine[i] = Array(row).fill(0)
         }
@@ -142,8 +158,8 @@ class Game extends React.Component {
         let randomRaw
         for (let i = 0 ; i < mine ; i++){
             do {
-                randomLine = Math.round(Math.random() * (9))
-                randomRaw = Math.round(Math.random() * (9))
+                randomLine = Math.round(Math.random() * (19))
+                randomRaw = Math.round(Math.random() * (19))
             } while(tableMine[randomLine][randomRaw] === 9)
             tableMine[randomLine][randomRaw] = 9;
         }
@@ -301,8 +317,8 @@ class Game extends React.Component {
         if (this.state.gameState === "") {
             const gameTable = this.state.gameTable.slice();
             const tableMine = this.state.tableMine.slice();
-            const line = Math.floor(i / 10)
-            const row = i % 10
+            const line = Math.floor(i / 20)
+            const row = i % 20
             console.log(gameTable)
             if (tableMine[line][row] === 0) {
                 this.setState({
@@ -317,8 +333,8 @@ class Game extends React.Component {
                     gameTable: gameTable,
                 },() => console.log("ok"))
             }
-            console.log(this.gameStatus(10,10))
-            if(this.gameStatus(10,10)){
+            console.log(this.gameStatus(20,20))
+            if(this.gameStatus(20,20)){
                 this.setState({
                     gameState: "GG",
                 });
@@ -346,12 +362,10 @@ class Game extends React.Component {
                         onClick={i => this.handleClick(i)}
                         onContextMenu={i=> this.rightClick(i)}
                     />
-                </div>
-
-                <div key={"Game state"}>
-                    <p key={"game message"}>{this.state.gameState}</p>
+                    <p className="gameState">{this.state.gameState}</p>
                 </div>
             </div>
+
         );
     }
 
