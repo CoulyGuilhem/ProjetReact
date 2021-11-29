@@ -31,14 +31,14 @@ class Board extends React.Component {
 
 
     renderSquare(i) {
-        const line = 20
+        let rows = this.props.rows
         let className
         let value = this.props.squares[i]
         if(value === 0){
             value = null
             className ="squareNull"
         } else if (value === null){
-            if(((Math.floor(i/line))%2 === 0)) {
+            if(((Math.floor(i/rows))%2 === 0)) {
                 if (i % 2 === 0) {
                     className = "squareNotDiscovered2"
                 } else {
@@ -85,9 +85,10 @@ class Board extends React.Component {
      */
 
     renderRows(coordonne){
+        let rowsLength = this.props.rows
         const rows = [];
-        for (let i = 0; i < 20; i++){
-            rows.push(this.renderSquare(i+coordonne*20))
+        for (let i = 0; i < rowsLength; i++){
+            rows.push(this.renderSquare(i+coordonne*rowsLength))
         }
         return (
             <div className="board_line" key={"lien : "+coordonne}>
@@ -102,8 +103,9 @@ class Board extends React.Component {
      */
 
     render() {
+        let linesLength = this.props.lines
         const lines = [];
-        for (let i = 0; i < 20; i++){
+        for (let i = 0; i < linesLength; i++){
             lines[i]=this.renderRows(i)
         }
         return (
@@ -131,9 +133,12 @@ class Game extends React.Component {
 
     constructor(props) {
         super(props);
+        const lines = this.props.lines
+        const rows = this.props.rows
+        const mines = this.props.mines
         this.state = {
-            tableMine: this.generateMines(20,20,40),
-            gameTable: Array(20*20).fill(null),
+            tableMine: this.generateMines(lines,rows,mines),
+            gameTable: Array(lines*rows).fill(null),
             gameState: ""
         };
     }
@@ -158,8 +163,8 @@ class Game extends React.Component {
         let randomRaw
         for (let i = 0 ; i < mine ; i++){
             do {
-                randomLine = Math.round(Math.random() * (19))
-                randomRaw = Math.round(Math.random() * (19))
+                randomLine = Math.round(Math.random() * (line-1))
+                randomRaw = Math.round(Math.random() * (row-1))
             } while(tableMine[randomLine][randomRaw] === 9)
             tableMine[randomLine][randomRaw] = 9;
         }
@@ -224,6 +229,7 @@ class Game extends React.Component {
                 }
             }
         }
+        console.log(tableMine)
         return tableMine
     }
 
@@ -239,7 +245,8 @@ class Game extends React.Component {
      */
 
     updateZone(gameTable,line,row,tableMine){
-        let id = line * tableMine.length + row
+
+        let id = line * this.props.rows + row
         if (line < 0 || line > tableMine.length-1) return gameTable;
         if (row <0 || row > tableMine[line].length-1) return gameTable;
         if(gameTable[id] !== null) return gameTable;
@@ -271,7 +278,7 @@ class Game extends React.Component {
         let id
         for(let i = 0; i < line ; i++){
             for(let j = 0; j < row ; j++) {
-                id = i * line + j
+                id = i * row + j
                 if((gameTable[id] === null || gameTable[id] ==="P") && tableMine[i][j] !== 9) {
                     return false
                 }
@@ -313,28 +320,29 @@ class Game extends React.Component {
      */
 
     handleClick(i) {
+        const rows = this.props.rows
+        const lines = this.props.lines
+        const gameTable = this.state.gameTable.slice();
+        const tableMine = this.state.tableMine.slice();
+        const line = Math.floor(i / rows)
+        const row = i % rows
 
         if (this.state.gameState === "") {
-            const gameTable = this.state.gameTable.slice();
-            const tableMine = this.state.tableMine.slice();
-            const line = Math.floor(i / 20)
-            const row = i % 20
-            console.log(gameTable)
+
             if (tableMine[line][row] === 0) {
                 this.setState({
                     gameTable: this.updateZone(gameTable,line, row,tableMine),
-                },() => console.log("ok"))
-
+                })
 
             } else if(gameTable[i] !== "P"){
-                console.log(tableMine[line][row])
                 gameTable[i] = tableMine[line][row]
                 this.setState({
                     gameTable: gameTable,
-                },() => console.log("ok"))
+                })
             }
-            console.log(this.gameStatus(20,20))
-            if(this.gameStatus(20,20)){
+
+            console.log(this.gameStatus(lines,rows))
+            if(this.gameStatus(lines,rows)){
                 this.setState({
                     gameState: "GG",
                 });
@@ -358,9 +366,11 @@ class Game extends React.Component {
             <div className="game" key="GAME" onContextMenu={(e)=> e.preventDefault()}>
                 <div className="game-board" key={"Game Board"}>
                     <Board
-                        squares={this.state.gameTable}
-                        onClick={i => this.handleClick(i)}
-                        onContextMenu={i=> this.rightClick(i)}
+                        lines = {this.props.lines}
+                        rows = {this.props.rows}
+                        squares = {this.state.gameTable}
+                        onClick = {i => this.handleClick(i)}
+                        onContextMenu = {i=> this.rightClick(i)}
                     />
                     <p className="gameState">{this.state.gameState}</p>
                 </div>
@@ -371,7 +381,7 @@ class Game extends React.Component {
 
 }
 // ========================================
-ReactDOM.render(<Game />, document.getElementById("root"));
+ReactDOM.render(<Game lines={20} rows={30} mines={50}/>, document.getElementById("root"));
 
 
 
