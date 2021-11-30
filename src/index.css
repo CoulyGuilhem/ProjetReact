@@ -1,5 +1,5 @@
 body {
-  background-color: black;
+  background-color: gray;
   font: 14px "Century Gothic", Futura, sans-serif;
   margin: 20px;
 }
@@ -9,9 +9,12 @@ ol, ul {
 }
 
 .game-board{
-  border: 50px solid #542;
+ /*
   margin-left: auto;
-  margin-right: auto;
+  margin-right: auto;*/
+  margin: 0 auto;
+  width: 340px;
+  border: 50px solid #542;
 }
 
 .board-row:after {
@@ -32,7 +35,7 @@ ol, ul {
 
 .squareFlag{
   background: #f90;
-  border: 3px solid #88c;
+  border: 2px solid #fc4;
   float: left;
   font-size: 24px;
   font-weight: bold;
@@ -46,7 +49,7 @@ ol, ul {
 
 .squareNotDiscovered{
   background: #66a;
-  border: 3px solid #88c;
+  border: 2px solid #88c;
   float: left;
   font-size: 24px;
   font-weight: bold;
@@ -59,7 +62,7 @@ ol, ul {
 }
 .squareNotDiscovered2{
   background: #aaf;
-  border: 3px solid #88c;
+  border: 2px solid #88c;
   float: left;
   font-size: 24px;
   font-weight: bold;
@@ -73,7 +76,7 @@ ol, ul {
 
 .squareNull{
   background: #5c5;
-  border: 3px solid #88c;
+  border: 2px solid #8f8;
   float: left;
   font-size: 24px;
   font-weight: bold;
@@ -87,7 +90,7 @@ ol, ul {
 
 .squareNearMine{
   background: #fe5;
-  border: 3px solid #88c;
+  border: 2px solid #ff9;
   float: left;
   font-size: 24px;
   font-weight: bold;
@@ -101,7 +104,7 @@ ol, ul {
 
 .squareMine{
   background: #f00;
-  border: 3px solid #88c;
+  border: 2px solid #f44;
   float: left;
   font-size: 24px;
   font-weight: bold;
@@ -130,4 +133,13 @@ ol, ul {
 
 .game-info {
   margin-left: 20px;
+}
+
+.menu {
+ /* margin-left: auto;
+  margin-right: auto;
+  alignment: center;
+  border: 2px solid #88c;*/
+  margin: 0 auto;
+  width: 100px;
 }

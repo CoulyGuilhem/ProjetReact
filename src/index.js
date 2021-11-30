@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import Menu from './Menu.js';
 
 /**
  * Square() permet de generer un bouton qui correspond à une case
@@ -103,7 +104,7 @@ class Board extends React.Component {
      */
 
     render() {
-        let linesLength = this.props.lines
+        let linesLength = this.props.lines // Nombre de ligne voulu
         const lines = [];
         for (let i = 0; i < linesLength; i++){
             lines[i]=this.renderRows(i)
@@ -121,6 +122,7 @@ class Board extends React.Component {
 
 class Game extends React.Component {
 
+
     /**
      * Il s'agit du constructeur lié  la gestion du jeu
      *
@@ -136,10 +138,12 @@ class Game extends React.Component {
         const lines = this.props.lines
         const rows = this.props.rows
         const mines = this.props.mines
+        this.tableMine = this.generateMines(lines,rows,mines)
+        this.round = 0
         this.state = {
-            tableMine: this.generateMines(lines,rows,mines),
             gameTable: Array(lines*rows).fill(null),
-            gameState: ""
+            gameState: "",
+            flagMax: mines
         };
     }
 
@@ -160,13 +164,13 @@ class Game extends React.Component {
             tableMine[i] = Array(row).fill(0)
         }
         let randomLine
-        let randomRaw
+        let randomRow
         for (let i = 0 ; i < mine ; i++){
             do {
                 randomLine = Math.round(Math.random() * (line-1))
-                randomRaw = Math.round(Math.random() * (row-1))
-            } while(tableMine[randomLine][randomRaw] === 9)
-            tableMine[randomLine][randomRaw] = 9;
+                randomRow = Math.round(Math.random() * (row-1))
+            } while(tableMine[randomLine][randomRow] === 9)
+            tableMine[randomLine][randomRow] = 9;
         }
         tableMine = this.generateWarning(tableMine,line,row)
         return tableMine
@@ -229,7 +233,6 @@ class Game extends React.Component {
                 }
             }
         }
-        console.log(tableMine)
         return tableMine
     }
 
@@ -274,7 +277,7 @@ class Game extends React.Component {
 
     gameStatus(line,row){
         const gameTable = this.state.gameTable.slice();
-        const tableMine = this.state.tableMine.slice();
+        const tableMine = this.tableMine.slice();
         let id
         for(let i = 0; i < line ; i++){
             for(let j = 0; j < row ; j++) {
@@ -300,12 +303,14 @@ class Game extends React.Component {
         if(gameTable[i] === null){
             gameTable[i] = "P"
             this.setState({
-                gameTable:gameTable
+                gameTable:gameTable,
+                flagMax: this.state.flagMax - 1
             })
         } else if (gameTable[i] === "P"){
             gameTable[i] = null
             this.setState({
-                gameTable:gameTable
+                gameTable:gameTable,
+                flagMax: this.state.flagMax + 1
             })
         }
 
@@ -323,9 +328,16 @@ class Game extends React.Component {
         const rows = this.props.rows
         const lines = this.props.lines
         const gameTable = this.state.gameTable.slice();
-        const tableMine = this.state.tableMine.slice();
         const line = Math.floor(i / rows)
         const row = i % rows
+
+        if(this.round === 0){
+            this.tableMine = this.generateMines(lines,rows,this.props.mines)
+            this.round = this.round +1
+        }
+        console.log("info : " +line + " : "+row)
+        const tableMine = this.tableMine.slice();
+
 
         if (this.state.gameState === "") {
 
@@ -341,7 +353,6 @@ class Game extends React.Component {
                 })
             }
 
-            console.log(this.gameStatus(lines,rows))
             if(this.gameStatus(lines,rows)){
                 this.setState({
                     gameState: "GG",
@@ -372,16 +383,17 @@ class Game extends React.Component {
                         onClick = {i => this.handleClick(i)}
                         onContextMenu = {i=> this.rightClick(i)}
                     />
-                    <p className="gameState">{this.state.gameState}</p>
+
+
                 </div>
+                <p className="gameState">{this.state.gameState}</p>
             </div>
 
         );
     }
-
 }
 // ========================================
-ReactDOM.render(<Game lines={20} rows={30} mines={50}/>, document.getElementById("root"));
+ReactDOM.render(<div><Game lines={10} rows={10} mines={10}/> <Menu/></div>, document.getElementById("root"));
 
 
 
