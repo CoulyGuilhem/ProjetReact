@@ -1,7 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import './index.css';
-import Menu from './Menu.js';
 
 /**
  * Square() permet de generer un bouton qui correspond à une case
@@ -393,7 +391,7 @@ class Game extends React.Component {
     }
 }
 // ========================================
-ReactDOM.render(<div><Game lines={10} rows={10} mines={10}/> <Menu/></div>, document.getElementById("root"));
+export default Game;
 
 
 
