@@ -45,7 +45,7 @@ class Index extends React.Component{
                 <div className="menu">
 
                 <div className="timer">
-                    <Timer/>
+                    <Timer />
                 </div>
                 <div className="settings">
                     <Settings lines = {this.lineCallbackFunction} rows = {this.rowCallbackFunction} mines = {this.mineCallbackFunction} restart = {this.restartTable}/>
