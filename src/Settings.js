@@ -6,8 +6,7 @@ export class Settings extends React.Component{
         this.state ={
             inputLine:10,
             inputRow:10,
-            inputMine:10,
-            mineMax: 50
+            inputMine:10
         }
     }
 
@@ -39,10 +38,10 @@ export class Settings extends React.Component{
             <div>
                 <div>
                     <input value={this.state.inputLine} onChange={evt => this.updateInputLine(evt)} type="number" min={10} max={50}/>
-                    <input value={this.state.inputRow} onChange={evt => this.updateInputRow(evt)}type="number" min={10} max={50}/>
+                    <input value={this.state.inputRow} onChange={evt => this.updateInputRow(evt)} type="number" min={10} max={50}/>
                 </div>
                 <div>
-                    <input value={this.state.inputMine} onChange={evt => this.updateInputMine(evt)}type="number" min={10} max={90}/>
+                    <input value={this.state.inputMine} onChange={evt => this.updateInputMine(evt)} type="number" min={10} max={90}/>
                     <input type="button" value={"START"} onClick={this.sendBackData}/>
                 </div>
             </div>
