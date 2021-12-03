@@ -24,8 +24,6 @@ export class Timer extends React.Component{
                 seconds: 0,
                 minute: this.state.minute + 1
             })
-        } else {
-            console.log("test")
         }
 
         if(this.state.minute >=60){
