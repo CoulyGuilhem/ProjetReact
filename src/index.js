@@ -5,8 +5,7 @@ import Timer from './Timer.js';
 import React from "react";
 import Settings from "./Settings";
 import FlagCounter from "./FlagCounter";
-import ReactDOM, {unmountComponentAtNode} from "react-dom";
-
+import ReactDOM from "react-dom";
 class Index extends React.Component{
 
 
@@ -15,7 +14,7 @@ class Index extends React.Component{
         lines: 10,
         rows: 10,
         mines: 10,
-        restart: true,
+        flags: 10,
         key: 0
     }
     lineCallbackFunction = (p) => {
@@ -27,11 +26,13 @@ class Index extends React.Component{
     mineCallbackFunction = (p) => {
         this.setState({mines: p})
     }
-    startNewGameCallBack = (p) => {
-        this.setState({restart : p})
-    }
+
     restartTable = () =>{
         this.setState({key:this.state.key+1})
+    }
+
+    flagsCallback = (p) =>{
+        this.setState({flags:p})
     }
 
 
@@ -40,20 +41,19 @@ class Index extends React.Component{
 
         return (
             <div>
-            <Game lines = {this.state.lines} rows = {this.state.rows} mines = {this.state.mines} key={this.state.key}/>
+            <Game lines = {this.state.lines} rows = {this.state.rows} mines = {this.state.mines} key={this.state.key} flags = {this.flagsCallback}/>
                 <div className="menu">
 
                 <div className="timer">
                     <Timer/>
                 </div>
                 <div className="settings">
-                    <Settings lines = {this.lineCallbackFunction} rows = {this.rowCallbackFunction} mines = {this.mineCallbackFunction} restart={this.startNewGameCallBack}/>
+                    <Settings lines = {this.lineCallbackFunction} rows = {this.rowCallbackFunction} mines = {this.mineCallbackFunction} restart = {this.restartTable}/>
                 </div>
-                <div className="flags">
-                    <FlagCounter/>
+                <div className="flags"  >
+                    <FlagCounter flags={this.state.flags}/>
                 </div>
                 <p>{this.state.lines}:{this.state.rows}:{this.state.mines}:{this.state.key}</p>
-                    <input type="button" value={"START"} onClick={this.restartTable}/>
             </div>
             </div>
         );

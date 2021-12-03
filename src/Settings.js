@@ -14,6 +14,7 @@ export class Settings extends React.Component{
         this.props.lines(this.state.inputLine)
         this.props.rows(this.state.inputRow)
         this.props.mines(this.state.inputMine)
+        this.props.restart()
     }
 
     updateInputLine(evt) {
@@ -41,7 +42,7 @@ export class Settings extends React.Component{
                     <input value={this.state.inputRow} onChange={evt => this.updateInputRow(evt)} type="number" min={10} max={50}/>
                 </div>
                 <div>
-                    <input value={this.state.inputMine} onChange={evt => this.updateInputMine(evt)} type="number" min={10} max={90}/>
+                    <input value={this.state.inputMine} onChange={evt => this.updateInputMine(evt)} type="number" min={10} max={30}/>
                     <input type="button" value={"START"} onClick={this.sendBackData}/>
                 </div>
             </div>

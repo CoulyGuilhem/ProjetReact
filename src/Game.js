@@ -37,14 +37,22 @@ class Board extends React.Component {
             value = null
             className ="squareNull"
         } else if (value === null){
-            if(((Math.floor(i/rows))%2 === 0)) {
-                if (i % 2 === 0) {
-                    className = "squareNotDiscovered2"
+            if((rows%2 === 0)) {
+                if (Math.floor(i/rows) % 2 === 0) {
+                    if (i % 2 === 0) {
+                        className = "squareNotDiscovered2"
+                    } else {
+                        className = "squareNotDiscovered"
+                    }
                 } else {
-                    className = "squareNotDiscovered"
+                    if (i % 2 !== 0) {
+                        className = "squareNotDiscovered2"
+                    } else {
+                        className = "squareNotDiscovered"
+                    }
                 }
             } else {
-                if (i % 2 !== 0) {
+                if (i % 2 === 0) {
                     className = "squareNotDiscovered2"
                 } else {
                     className = "squareNotDiscovered"
@@ -120,13 +128,6 @@ class Board extends React.Component {
 
 class Game extends React.Component {
 
-    restart(){
-        if (this.props.restart){
-            this.props.restart = false
-            this.call.constructor()
-        }
-    }
-
 
     /**
      * Il s'agit du constructeur lié  la gestion du jeu
@@ -142,15 +143,16 @@ class Game extends React.Component {
         super(props);
         const lines = this.props.lines
         const rows = this.props.rows
-        const mines = this.props.mines
-        this.tableMine = this.generateMines(lines,rows,mines)
+        const minePercentage = this.props.mines
+
+        this.tableMine = this.generateMines(lines,rows,minePercentage)
         this.round = 0
         this.state = {
             gameTable: Array(lines * rows).fill(null),
             gameState: "",
-            flagMax: mines
+            flagMax: Math.floor((lines * rows * minePercentage)/100)
         }
-        console.log("call cosntructor")
+        this.props.flags(this.state.flagMax)
     }
 
     /**
@@ -160,14 +162,21 @@ class Game extends React.Component {
      *
      * @param line
      * @param row
-     * @param mine
+     * @param minePercentage
      * @returns {any[]}
      */
 
-    generateMines(line,row,mine){
+    generateMines(line,row,minePercentage){
         let tableMine = Array(line)
+        let lineRow
+        let mine = Math.floor((line * row * minePercentage)/100)
         for(let i = 0;i<line;i++){
-            tableMine[i] = Array(row).fill(0)
+            lineRow = []
+            for(let j = 0;j<row;j++){
+
+                lineRow[j] = 0
+            }
+            tableMine[i] = lineRow
         }
         let randomLine
         let randomRow
@@ -305,21 +314,26 @@ class Game extends React.Component {
 
     rightClick(i){
         const gameTable = this.state.gameTable.slice();
-
-        if(gameTable[i] === null){
+        let flags
+        if(gameTable[i] === null && this.state.flagMax > 0){
             gameTable[i] = "P"
             this.setState({
                 gameTable:gameTable,
                 flagMax: this.state.flagMax - 1
-            })
+            },this.setPropsFlag)
+
         } else if (gameTable[i] === "P"){
             gameTable[i] = null
             this.setState({
                 gameTable:gameTable,
                 flagMax: this.state.flagMax + 1
-            })
+            },this.setPropsFlag)
         }
+        this.setPropsFlag()
 
+    }
+    setPropsFlag(){
+        this.props.flags(this.state.flagMax)
     }
 
     /**
@@ -336,12 +350,11 @@ class Game extends React.Component {
         const gameTable = this.state.gameTable.slice();
         const line = Math.floor(i / rows)
         const row = i % rows
-
+        /**
         if(this.round === 0){
             this.tableMine = this.generateMines(lines,rows,this.props.mines)
             this.round = this.round +1
-        }
-        console.log("info : " +line + " : "+row)
+        }*/
         const tableMine = this.tableMine.slice();
 
 
@@ -389,8 +402,6 @@ class Game extends React.Component {
                         onClick = {i => this.handleClick(i)}
                         onContextMenu = {i=> this.rightClick(i)}
                     />
-
-
                 </div>
                 <p className="gameState">{this.state.gameState}</p>
             </div>
