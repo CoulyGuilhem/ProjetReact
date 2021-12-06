@@ -314,7 +314,6 @@ class Game extends React.Component {
 
     rightClick(i){
         const gameTable = this.state.gameTable.slice();
-        let flags
         if(gameTable[i] === null && this.state.flagMax > 0){
             gameTable[i] = "P"
             this.setState({
@@ -329,8 +328,6 @@ class Game extends React.Component {
                 flagMax: this.state.flagMax + 1
             },this.setPropsFlag)
         }
-        this.setPropsFlag()
-
     }
     setPropsFlag(){
         this.props.flags(this.state.flagMax)
@@ -374,17 +371,26 @@ class Game extends React.Component {
 
             if(this.gameStatus(lines,rows)){
                 this.setState({
-                    gameState: "GG",
-                });
+                    gameState: "GG"
+                }, this.setPropGameState);
+
             }
 
             if(gameTable[i] === 9){
                 this.setState({
-                    gameState: "BOOM",
-                });
+                    gameState: "BOOM"
+                },this.setPropGameState);
+
             }
         }
     }
+
+    setPropGameState(){
+        let valeur = this.state.gameState
+        console.log(valeur)
+        this.props.gameState(valeur)
+    }
+
 
     /**
      * permet de generer une table
@@ -402,8 +408,9 @@ class Game extends React.Component {
                         onClick = {i => this.handleClick(i)}
                         onContextMenu = {i=> this.rightClick(i)}
                     />
+
+
                 </div>
-                <p className="gameState">{this.state.gameState}</p>
             </div>
 
         );

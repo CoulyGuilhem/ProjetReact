@@ -5,6 +5,7 @@ import Timer from './Timer.js';
 import React from "react";
 import Settings from "./Settings";
 import FlagCounter from "./FlagCounter";
+import EtatPartie from "./EtatPartie";
 import ReactDOM from "react-dom";
 class Index extends React.Component{
 
@@ -15,7 +16,8 @@ class Index extends React.Component{
         rows: 10,
         mines: 10,
         flags: 10,
-        key: 0
+        key: 0,
+        gameState: "En cours"
     }
     lineCallbackFunction = (p) => {
         this.setState({lines: p})
@@ -28,24 +30,31 @@ class Index extends React.Component{
     }
 
     restartTable = () =>{
-        this.setState({key:this.state.key+1})
+        this.setState({key:this.state.key+1,gameState: "En cours",endGame:false})
     }
 
     flagsCallback = (p) =>{
         this.setState({flags:p})
     }
 
+    gameStateCallback = (p) =>{
+        this.setState(
+            {gameState:p
+        })
+    }
+
 
 
     render(){
-
+        let val = this.state.gameState
+        console.log("DE LA MERDE : "+ val + " PUTE : "+this.state.gameState)
         return (
             <div>
-            <Game lines = {this.state.lines} rows = {this.state.rows} mines = {this.state.mines} key={this.state.key} flags = {this.flagsCallback}/>
+            <Game lines = {this.state.lines} rows = {this.state.rows} mines = {this.state.mines} key={this.state.key} flags = {this.flagsCallback} gameState = {this.gameStateCallback}/>
                 <div className="menu">
-
+                    <EtatPartie gameState = {this.state.gameState} game={this.state.key}/>
                 <div className="timer">
-                    <Timer/>
+                    <Timer game = {this.state.key} gameState={val}/>
                 </div>
                 <div className="settings">
                     <Settings lines = {this.lineCallbackFunction} rows = {this.rowCallbackFunction} mines = {this.mineCallbackFunction} restart = {this.restartTable}/>
