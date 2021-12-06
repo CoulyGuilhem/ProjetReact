@@ -46,15 +46,13 @@ class Index extends React.Component{
 
 
     render(){
-        let val = this.state.gameState
-        console.log("DE LA MERDE : "+ val + " PUTE : "+this.state.gameState)
         return (
             <div>
             <Game lines = {this.state.lines} rows = {this.state.rows} mines = {this.state.mines} key={this.state.key} flags = {this.flagsCallback} gameState = {this.gameStateCallback}/>
                 <div className="menu">
                     <EtatPartie gameState = {this.state.gameState} game={this.state.key}/>
                 <div className="timer">
-                    <Timer game = {this.state.key} gameState={val}/>
+                    <Timer game = {this.state.key} gameState={this.state.gameState}/>
                 </div>
                 <div className="settings">
                     <Settings lines = {this.lineCallbackFunction} rows = {this.rowCallbackFunction} mines = {this.mineCallbackFunction} restart = {this.restartTable}/>
@@ -62,7 +60,6 @@ class Index extends React.Component{
                 <div className="flags"  >
                     <FlagCounter flags={this.state.flags}/>
                 </div>
-                <p>{this.state.lines}:{this.state.rows}:{this.state.mines}:{this.state.key}</p>
             </div>
             </div>
         );

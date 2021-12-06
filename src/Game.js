@@ -314,20 +314,23 @@ class Game extends React.Component {
 
     rightClick(i){
         const gameTable = this.state.gameTable.slice();
-        if(gameTable[i] === null && this.state.flagMax > 0){
-            gameTable[i] = "P"
-            this.setState({
-                gameTable:gameTable,
-                flagMax: this.state.flagMax - 1
-            },this.setPropsFlag)
+        if(this.state.gameState === ""){
+            if(gameTable[i] === null && this.state.flagMax > 0){
+                gameTable[i] = "P"
+                this.setState({
+                    gameTable:gameTable,
+                    flagMax: this.state.flagMax - 1
+                },this.setPropsFlag)
 
-        } else if (gameTable[i] === "P"){
-            gameTable[i] = null
-            this.setState({
-                gameTable:gameTable,
-                flagMax: this.state.flagMax + 1
-            },this.setPropsFlag)
+            } else if (gameTable[i] === "P"){
+                gameTable[i] = null
+                this.setState({
+                    gameTable:gameTable,
+                    flagMax: this.state.flagMax + 1
+                },this.setPropsFlag)
+            }
         }
+
     }
     setPropsFlag(){
         this.props.flags(this.state.flagMax)
@@ -387,7 +390,6 @@ class Game extends React.Component {
 
     setPropGameState(){
         let valeur = this.state.gameState
-        console.log(valeur)
         this.props.gameState(valeur)
     }
 

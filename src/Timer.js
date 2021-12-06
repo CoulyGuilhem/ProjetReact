@@ -3,13 +3,31 @@ import React from 'react';
 export class Timer extends React.Component{
 
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            seconds: 0,
+            minute: 0,
+            heure: 0,
+            game: 0,
+        }
+        this.startTimer(false)
+    }
 
-    state = {
-        seconds: 0,
-        minute: 0,
-        heure: 0,
-        game: 0,
-        timerRun: 0
+
+    startTimer(stop){
+        if(!stop){
+            this.intervalID = setInterval(
+                () => {
+                    this.timeSwitch()
+                    this.setState({ seconds: this.state.seconds + 1 })
+                },
+                1000
+            );
+        } else {
+            clearInterval(this.intervalID)
+        }
+
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
@@ -18,45 +36,19 @@ export class Timer extends React.Component{
                 seconds: 0,
                 minute: 0,
                 heure: 0,
-                game: this.state.game+1,
-                timerRun: 0
+                game: this.state.game+1
             })
-        }
-
-
-        if(this.props.gameState === "En cours"){
-            console.log("tamer" + this.props.gameState)
-            this.timer(true)
+            this.startTimer(false)
         } else {
-            console.log("false : " + this.props.gameState)
-            this.timer(false)
+            let gameState = nextProps.gameState
+            if(gameState !== "En cours") {
+                this.startTimer(true)
+            }
         }
+
     }
 
 
-    timer(i) {
-        console.log("FDP : "+i+" TAPUTEDEMERE : " + this.props.gameState + " gkjkljldfkmdf f: "+this.state.timerRun)
-
-        if (i && this.state.timerRun === 0){
-            this.setState({
-                timerRun : 1
-            })
-            this.intervalID = setInterval(
-                () => {
-                    this.timeSwitch()
-                    this.setState({ seconds: this.state.seconds + 1 })
-                },
-                1000
-            );
-        }else if (this.props.gameState !== "En cours"){
-            clearInterval(this.intervalID)
-            this.setState({
-                timerRun : 0
-            })
-        }
-
-        //
-    }
 
     timeSwitch(){
         if(this.state.seconds >=60){
