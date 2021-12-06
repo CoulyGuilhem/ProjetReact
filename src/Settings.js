@@ -42,7 +42,7 @@ export class Settings extends React.Component{
                     <input value={this.state.inputRow} onChange={evt => this.updateInputRow(evt)} type="number" min={10} max={50}/>
                 </div>
                 <div>
-                    <input value={this.state.inputMine} onChange={evt => this.updateInputMine(evt)} type="number" min={10} max={30}/>
+                    <input value={this.state.inputMine} onChange={evt => this.updateInputMine(evt)} type="number" min={10} max={25}/>
                     <input type="button" value={"START"} onClick={this.sendBackData}/>
                 </div>
             </div>

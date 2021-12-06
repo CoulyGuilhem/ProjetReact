@@ -2,28 +2,52 @@ import React from 'react';
 
 export class Timer extends React.Component{
 
-    state = {
-        seconds: 0,
-        minute: 0,
-        heure: 0
-    }
 
-    componentWillReceiveProps(nextProps){
-        this.setState({
+    constructor(props) {
+        super(props);
+        this.state = {
             seconds: 0,
             minute: 0,
-            heure: 0
-        })
+            heure: 0,
+            game: 0,
+        }
+        this.startTimer(false)
     }
-    componentDidMount() {
-        setInterval(
-            () => {
-                this.timeSwitch()
-                this.setState({ seconds: this.state.seconds + 1 })
-            },
-            1000
-        );
-        //
+
+
+    startTimer(stop){
+        if(!stop){
+            this.intervalID = setInterval(
+                () => {
+                    this.timeSwitch()
+                    this.setState({ seconds: this.state.seconds + 1 })
+                },
+                1000
+            );
+        } else {
+            clearInterval(this.intervalID)
+        }
+
+    }
+
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        if(this.props.game !== this.state.game){
+            this.setState({
+                seconds: 0,
+                minute: 0,
+                heure: 0,
+                game: this.state.game+1
+            })
+            this.startTimer(false)
+        } else {
+            let gameState = nextProps.gameState
+            if(gameState !== "En cours") {
+                this.startTimer(true)
+            }
+        }
+
+
     }
 
     timeSwitch(){

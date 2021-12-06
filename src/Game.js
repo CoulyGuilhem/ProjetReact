@@ -314,22 +314,22 @@ class Game extends React.Component {
 
     rightClick(i){
         const gameTable = this.state.gameTable.slice();
-        let flags
-        if(gameTable[i] === null && this.state.flagMax > 0){
-            gameTable[i] = "P"
-            this.setState({
-                gameTable:gameTable,
-                flagMax: this.state.flagMax - 1
-            },this.setPropsFlag)
+        if(this.state.gameState === ""){
+            if(gameTable[i] === null && this.state.flagMax > 0){
+                gameTable[i] = "P"
+                this.setState({
+                    gameTable:gameTable,
+                    flagMax: this.state.flagMax - 1
+                },this.setPropsFlag)
 
-        } else if (gameTable[i] === "P"){
-            gameTable[i] = null
-            this.setState({
-                gameTable:gameTable,
-                flagMax: this.state.flagMax + 1
-            },this.setPropsFlag)
+            } else if (gameTable[i] === "P"){
+                gameTable[i] = null
+                this.setState({
+                    gameTable:gameTable,
+                    flagMax: this.state.flagMax + 1
+                },this.setPropsFlag)
+            }
         }
-        this.setPropsFlag()
 
     }
     setPropsFlag(){
@@ -374,17 +374,25 @@ class Game extends React.Component {
 
             if(this.gameStatus(lines,rows)){
                 this.setState({
-                    gameState: "GG",
-                });
+                    gameState: "GG"
+                }, this.setPropGameState);
+
             }
 
             if(gameTable[i] === 9){
                 this.setState({
-                    gameState: "BOOM",
-                });
+                    gameState: "BOOM"
+                },this.setPropGameState);
+
             }
         }
     }
+
+    setPropGameState(){
+        let valeur = this.state.gameState
+        this.props.gameState(valeur)
+    }
+
 
     /**
      * permet de generer une table
@@ -402,8 +410,9 @@ class Game extends React.Component {
                         onClick = {i => this.handleClick(i)}
                         onContextMenu = {i=> this.rightClick(i)}
                     />
+
+
                 </div>
-                <p className="gameState">{this.state.gameState}</p>
             </div>
 
         );
