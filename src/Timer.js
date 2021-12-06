@@ -30,6 +30,7 @@ export class Timer extends React.Component{
 
     }
 
+
     componentWillReceiveProps(nextProps, nextContext) {
         if(this.props.game !== this.state.game){
             this.setState({
@@ -46,9 +47,8 @@ export class Timer extends React.Component{
             }
         }
 
+
     }
-
-
 
     timeSwitch(){
         if(this.state.seconds >=60){
