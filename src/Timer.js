@@ -2,7 +2,11 @@ import React from 'react';
 
 export class Timer extends React.Component{
 
-
+    /**
+     * Constructeur
+     * intialise le state
+     * @param props
+     */
     constructor(props) {
         super(props);
         this.state = {
@@ -14,6 +18,12 @@ export class Timer extends React.Component{
         this.startTimer(false)
     }
 
+
+    /**
+     * startTimer permet de generer le timer
+     * @param stop si stop = false -> on initialise un timer qu'on stock dans intervalID
+     *             sinon (true) -> on arrete le timer sauvegardé dans intervalID
+     */
 
     startTimer(stop){
         if(!stop){
@@ -30,8 +40,14 @@ export class Timer extends React.Component{
 
     }
 
+    /**
+     * componentWillReceiveProps() est appelé lorsque de nouveaux props sont envoyés
+     * @param nextProps nextProps contient les nouveaux props envoyés
+     */
 
-    componentWillReceiveProps(nextProps, nextContext) {
+    componentWillReceiveProps(nextProps) {
+
+        // SI ON DEMARRE UNE NOUVELLE PARTIE
         if(this.props.game !== this.state.game){
             this.setState({
                 seconds: 0,
@@ -39,8 +55,9 @@ export class Timer extends React.Component{
                 heure: 0,
                 game: this.state.game+1
             })
+            this.startTimer(true)
             this.startTimer(false)
-        } else {
+        } else { // SINON ON STOP LE TIMER
             let gameState = nextProps.gameState
             if(gameState !== "En cours") {
                 this.startTimer(true)
@@ -49,6 +66,11 @@ export class Timer extends React.Component{
 
 
     }
+
+
+    /**
+     * timeSwitch() contient le code pour convertir les secondes en minutes et les minutes en heures
+     */
 
     timeSwitch(){
         if(this.state.seconds >=60){

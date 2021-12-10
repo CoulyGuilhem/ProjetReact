@@ -3,35 +3,26 @@ body {
   font: 14px "Century Gothic", Futura, sans-serif;
   margin: 20px;
 }
-
 ol, ul {
   padding-left: 30px;
 }
-
 .game-board{
- /*
-  margin-left: auto;
-  margin-right: auto;*/
   margin: 0 auto;
   border: 50px solid #542;
 }
-
 .board-row:after {
   clear: both;
   content: "";
   display: table;
 }
-
 .status {
   margin-bottom: 10px;
 }
-
 .gameState{
   color:white;
   margin-left: auto;
   margin-right: auto;
 }
-
 .squareFlag{
   background: #f90;
   border: 2px solid #fc4;
@@ -45,7 +36,6 @@ ol, ul {
   text-align: center;
   width: 34px;
 }
-
 .squareNotDiscovered{
   background: #66a;
   border: 2px solid #88c;
@@ -72,7 +62,6 @@ ol, ul {
   text-align: center;
   width: 34px;
 }
-
 .squareNull{
   background: #5c5;
   border: 2px solid #8f8;
@@ -86,7 +75,6 @@ ol, ul {
   text-align: center;
   width: 34px;
 }
-
 .squareNearMine{
   background: #fe5;
   border: 2px solid #ff9;
@@ -100,7 +88,6 @@ ol, ul {
   text-align: center;
   width: 34px;
 }
-
 .squareMine{
   background: #f00;
   border: 2px solid #f44;
@@ -114,31 +101,21 @@ ol, ul {
   text-align: center;
   width: 34px;
 }
-
-
-
 .square:focus {
   outline: none;
 }
-
 .kbd-navigation .square:focus {
   background: #ddd;
 }
-
 .game {
   display: flex;
   flex-direction: row;
 }
-
 .game-info {
   margin-left: 20px;
 }
-
 .menu {
- /* margin-left: auto;
-  margin-right: auto;
-  alignment: center;
-  border: 2px solid #88c;*/
+  width:680px;
+  border: 2px solid #88c;
   margin: 0 auto;
-  width: 100px;
 }

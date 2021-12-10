@@ -7,6 +7,13 @@ export class EtatPartie extends React.Component {
         numberGame: 0
     }
 
+    /**
+     * Cette fonction réinitialise le message affiché lorsqu'on appuie sur le bouton pour démarrer une partie
+     * @param nextProps
+     * @param nextContext
+     */
+
+
     componentWillReceiveProps(nextProps, nextContext) {
         if (this.props.game !== this.state.numberGame) {
             this.setState({
